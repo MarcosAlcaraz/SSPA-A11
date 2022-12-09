@@ -19,14 +19,11 @@ class MainWindow(QMainWindow):
         # self.ui.mostrar.clicked.connect(self.click_mostrar)
         self.ui.insertar_inicio.clicked.connect(self.click_insertar_inicio)
         self.ui.insertar_final.clicked.connect(self.click_insertar_final)
-        self.ui.randomPushbutoon.clicked.connect(self.random)
+        self.ui.randomPushButton.clicked.connect(self.random)
 
-        self.ui.OrdenarAscendenteID_pushbutton.clicked.connect(
-            self.accionMostrarTablaSBID)
-        self.ui.OrdenarAscendenteVelocidad_pushbutton.clicked.connect(
-            self.accionMostrarTablaSBS)
-        self.ui.OrdenarDescendenteDistancia_pushbutton.clicked.connect(
-            self.accionMostrarTablaSBD)
+        self.ui.OrdenarAscendenteID_pushbutton_2.clicked.connect(self.accionMostrarTablaSBID)
+        self.ui.OrdenarAscendenteVelocidad_pushbutton_2.clicked.connect(self.accionMostrarTablaSBS)
+        self.ui.OrdenarDescendenteDistancia_pushbutton_2.clicked.connect(self.accionMostrarTablaSBD)
 
         self.ui.accionAbrir.triggered.connect(self.accionAbrirArchivo)
         self.ui.accionGuardar.triggered.connect(self.accionGuardarArchivo)
@@ -305,8 +302,7 @@ class MainWindow(QMainWindow):
     @Slot()
     def click_insertar_final(self):
         self.id += 1
-        aux = Particula(self.id, self.ui.ox.value(), self.ui.oy.value(), self.ui.dx.value(), self.ui.dy.value(
-        ), self.ui.velocidad.value(), self.ui.red.value(), self.ui.green.value(), self.ui.blue.value())
+        aux = Particula(self.id, self.ui.ox.value(), self.ui.oy.value(), self.ui.dx.value(), self.ui.dy.value(), self.ui.velocidad.value(), self.ui.red.value(), self.ui.green.value(), self.ui.blue.value())
         self.manager.agregarFinal(aux)
         self.click_mostrar()
 
@@ -318,7 +314,18 @@ class MainWindow(QMainWindow):
     @Slot()
     def random(self):
         self.id += 1
-        aux = Particula(self.id, randint(0, 500), randint(0, 500), randint(0, 500), randint(0, 500)(
-        ), randint(0, 999), randint(0, 255), randint(0, 255), randint(0, 255))
+
+        ox =  randint(0, 500)
+        oy = randint(0, 500)
+        dx = randint(0, 500)
+        dy = randint(0, 500)
+        velocidad = randint(0, 999)
+        red = randint(0, 255)
+        green = randint(0, 255)
+        blue = randint(0, 255)
+
+        aux = Particula(self.id, ox, oy, dx, dy, velocidad, red, green, blue)
         self.manager.agregarFinal(aux)
         self.click_mostrar()
+        self.dibujar()
+        self.accionMostrarTabla()
