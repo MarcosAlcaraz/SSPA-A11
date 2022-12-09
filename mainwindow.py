@@ -5,6 +5,7 @@ from ui_mainwindow import Ui_MainWindow
 from manager import Manager
 from particula import Particula
 from random import randint
+from algoritmos import distancia_euclidiana
 
 
 class MainWindow(QMainWindow):
@@ -14,12 +15,16 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.id = 0
+        self.puntosCercanos = []
 
         # Cuando el botón pushbutton es presionado, ejecuta la función click_agregar
         # self.ui.mostrar.clicked.connect(self.click_mostrar)
         self.ui.insertar_inicio.clicked.connect(self.click_insertar_inicio)
         self.ui.insertar_final.clicked.connect(self.click_insertar_final)
         self.ui.randomPushButton.clicked.connect(self.random)
+        self.ui.mostrarGraficoPushButton.clicked.connect(self.dibujar)
+        self.ui.mostrarPuntosPushButton_2.clicked.connect(self.dibujarPuntos)
+        self.ui.mostrarPuntosMasCercanosPushButton_3.clicked.connect(self.calcularPuntosCercanos)
 
         self.ui.OrdenarAscendenteID_pushbutton_2.clicked.connect(self.accionMostrarTablaSBID)
         self.ui.OrdenarAscendenteVelocidad_pushbutton_2.clicked.connect(self.accionMostrarTablaSBS)
@@ -329,3 +334,41 @@ class MainWindow(QMainWindow):
         self.click_mostrar()
         self.dibujar()
         self.accionMostrarTabla()
+
+    @Slot()
+    def dibujarPuntos(self):
+        self.scene.clear()
+        pen = QPen()
+
+        for particula in self.manager:
+            pen.setWidth(2)
+            color = QColor(particula.red, particula.green, particula.blue)
+            pen.setColor(color)
+            self.scene.addEllipse(particula.origenX, particula.origenY, 5, 5, pen)
+            self.scene.addEllipse(particula.destinoX,  particula.destinoY, 5, 5, pen)
+
+    @Slot()
+    def dibujarPuntosCercanos(self):        
+        for p1, p2 in self.puntosCercanos:
+            pen = QPen()
+            pen.setWidth(2)
+            color = QColor(p1.red, p1.green, p1.blue)
+            pen.setColor(color)
+            self.scene.addLine(p1.origenX+5, p1.origenY+5, p2.origenX+5, p2.origenY+5)
+
+    @Slot()
+    def calcularPuntosCercanos(self):
+        for p1 in self.manager:
+            dm = 1000
+            p = Particula()
+            for a in self.manager:
+                if p1 == a:
+                    continue
+                d = distancia_euclidiana(p1.origenX, p1.origenY, a.origenX, a.origenY)
+                if d < dm:
+                    dm = d
+                    p = p1
+            self.puntosCercanos.append([p1, p])
+        self.scene.clear()
+        self.dibujarPuntosCercanos()
+            
